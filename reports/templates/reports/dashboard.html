@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% load filters %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% block body %}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <tr>
+                <th>Type</th>
+                <th>Value</th>
+                <th>When</th>
+            </tr>
+
+            {% for item in data.samples %}
+                <tr>
+                    <td>{{ item.type|type_name }}</td>
+                    <td>{{ item.value }}</td>
+                    <td>{{ item.when }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock body %}

@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView
@@ -41,14 +42,26 @@ class LogoutView(DjangoLogoutView):
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'reports/dashboard.html'
 
+
+class DailyReportView(LoginRequiredMixin, TemplateView):
+    template_name = 'reports/daily.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         angaza = Angaza()
         angaza.set_auth(username='atec_iot', password='U*p9fJi31$$X')
+        today = datetime.date.today()
+        delta = datetime.timedelta(days=1)
+        from_date = today - delta
+        # context['data'] = angaza.get_usage_data(
+        #     unit_number=74878232,
+        #     from_when_dt='{}T00:00:00+00:00'.format(str(from_date)),
+        #     to_when_dt='{}T00:00:00+00:00'.format(str(today))
+        # )
         context['data'] = angaza.get_usage_data(
             unit_number=74878232,
-            from_when_dt='2020-11-01T00:00:00+00:00',
-            to_when_dt='2020-11-30T00:00:00+00:00'
+            from_when_dt='2020-08-20T00:00:00+00:00',
+            to_when_dt='2020-08-21T00:00:00+00:00'
         )
 
         return context

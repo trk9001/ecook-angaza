@@ -4,7 +4,7 @@ register = template.Library()
 
 TYPES = {
     '219': 'Serial Number',
-    '220': 'Average Battery Voltage (Last 12 Hours',
+    '220': 'Average Battery Voltage (Last 12 Hours)',
     '221': 'Max Battery Voltage (Last 12 Hours)',
     '222': 'Min Battery Voltage (Last 12 Hours)',
     '223': 'Battery Critical State Count',

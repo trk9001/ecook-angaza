@@ -7,16 +7,26 @@
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover">
             <tr>
-                <th>Type</th>
-                <th>Value</th>
-                <th>When</th>
+                <th>Serial Number</th>
+                <th>Daily Power Consumption (KWh)</th>
+                <th>Left Stove Cooking Time</th>
+                <th>Right Stove Cooking Time</th>
+                <th>Daily Cooking Time</th>
+                <th>Stove On/Off Count</th>
+                <th>Average Power Consumption per use</th>
+                <th>Average Cooking time per use</th>
             </tr>
 
-            {% for item in data.samples %}
+            {% for item in data %}
                 <tr>
-                    <td>{{ item.type|type_name }}</td>
-                    <td>{{ item.value }}</td>
-                    <td>{{ item.when }}</td>
+                    <td>{{ item.serial_number }}</td>
+                    <td>{{ item.daily_power_consumption }}</td>
+                    <td>{{ item.left_stove_cooktime }}</td>
+                    <td>{{ item.right_stove_cooktime }}</td>
+                    <td>{{ item.daily_cooking_time }}</td>
+                    <td>{{ item.stove_on_off_count }}</td>
+                    <td>{{ item.average_power_consumption_per_use }}</td>
+                    <td>{{ item.average_cooking_time_per_use }}</td>
                 </tr>
             {% endfor %}
         </table>

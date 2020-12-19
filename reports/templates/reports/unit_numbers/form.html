@@ -1,0 +1,28 @@
+{% csrf_token %}
+
+<div class="form-group">
+    <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+    <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}" class="form-control" value="{{ form.name.value|default_if_none:'' }}">
+
+    {% for error in form.name.errors %}
+        <span class="text-danger">{{ error }}</span>
+    {% endfor %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.unit_number.id_for_label }}">{{ form.unit_number.label }}</label>
+    <input type="text" name="{{ form.unit_number.name }}" id="{{ form.unit_number.id_for_label }}" class="form-control" value="{{ form.unit_number.value|default_if_none:'' }}">
+
+    {% for error in form.unit_number.errors %}
+        <span class="text-danger">{{ error }}</span>
+    {% endfor %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+    <textarea name="{{ form.description.name }}" id="{{ form.description.id_for_label }}" class="form-control">{{ form.description.value|default_if_none:'' }}</textarea>
+
+    {% for error in form.description.errors %}
+        <span class="text-danger">{{ error }}</span>
+    {% endfor %}
+</div>

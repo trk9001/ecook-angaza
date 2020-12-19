@@ -17,9 +17,9 @@ class UnitNumber(models.Model):
 
 class UsageData(models.Model):
     unit_number = models.PositiveIntegerField()
-    when = models.DateTimeField()
-    type = models.CharField(max_length=255)
-    value = models.CharField(max_length=255)
+    when_datetime = models.DateTimeField()
+    data_type = models.CharField(max_length=255)
+    data_value = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

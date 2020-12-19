@@ -1,4 +1,4 @@
-Angaza-Nexus-SDK-Python @ file:///./Angaza_Nexus_SDK_Python-0.0.1-py3-none-any.whl
+Angaza-Nexus-SDK-Python @ file:///./Angaza_Nexus_SDK_Python-0.0.2-py3-none-any.whl
 asgiref==3.3.1
 astroid==2.4.2
 certifi==2020.12.5

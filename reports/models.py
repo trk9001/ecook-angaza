@@ -1,6 +1,20 @@
 from django.db import models
 
 
+class UnitNumber(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+    unit_number = models.PositiveIntegerField()
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        if self.name is not None:
+            return self.name + ' - ' + self.unit_number
+
+        return self.unit_number
+
+
 class UsageData(models.Model):
     unit_number = models.PositiveIntegerField()
     when = models.DateTimeField()

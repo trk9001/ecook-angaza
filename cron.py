@@ -37,6 +37,3 @@ cursor.executemany(
     query,
     query_params
 )
-
-
-

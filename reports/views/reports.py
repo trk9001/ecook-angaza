@@ -1,7 +1,8 @@
-import datetime
+import datetime, math
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from angaza import Angaza
+from django.db.models import Sum
+from reports.models import UsageData
 
 
 TYPES = {
@@ -26,65 +27,52 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'reports/dashboard.html'
 
 
-class DailyReportView(LoginRequiredMixin, TemplateView):
-    template_name = 'reports/daily.html'
+class ReportsView(LoginRequiredMixin, TemplateView):
+    template_name = 'reports/reports/reports.html'
 
     def get_context_data(self, **kwargs):
+        done_unit_numbers = []
+        report_data = []
         context = super().get_context_data(**kwargs)
-        angaza = Angaza()
-        angaza.set_auth(username='atec_iot', password='U*p9fJi31$$X')
-        today = datetime.date.today()
-        delta = datetime.timedelta(days=1)
-        from_date = today - delta
-        # data = angaza.get_usage_data(
-        #     unit_number=74878232,
-        #     from_when_dt='{}T00:00:00+00:00'.format(str(from_date)),
-        #     to_when_dt='{}T00:00:00+00:00'.format(str(today))
-        # )
-        data = angaza.get_usage_data(
-            unit_number=74878232,
-            from_when_dt='2020-08-20T00:00:00+00:00',
-            to_when_dt='2020-08-21T00:00:00+00:00'
-        )
-        temp_report_data = []
-        report_data = {}
+        request = self.request
 
-        for item in data['samples']:
-            value = 0.0
-            count = 0
+        if 'daterange' in request.GET:
+            daterange = request.GET['daterange']
+            daterange_splitted = daterange.split(' - ')
+            from_date = daterange_splitted[0]
+            from_date = datetime.datetime.strptime(from_date, '%m/%d/%Y')
+            to_date = daterange_splitted[1]
+            to_date = datetime.datetime.strptime(to_date, '%m/%d/%Y')
 
-            for jitem in data['samples']:
-                if item['type'] == jitem['type']:
-                    if jitem['type'] == 219:
-                        value = jitem['value']
-                    else:
-                        value += jitem['value']
-                    count += 1
+            data = UsageData.objects.filter(when_datetime__gte=from_date, when_datetime__lte=to_date).values(
+                'unit_number',
+                'data_type',
+                'when_datetime__date'
+            ).annotate(Sum('data_value'))
 
-            temp_data = list(
-                filter(
-                    lambda x: x['type'] == item['type'],
-                    temp_report_data
-                )
-            )
+            # print(data)
 
-            if len(temp_data) == 0:
-                temp_report_data.append({
-                    'type': item['type'],
-                    'value': value,
-                    'count': count
-                })
+            for item in data:
+                if item['unit_number'] not in done_unit_numbers:
+                    jitem_data = {
+                        'unit_number': item['unit_number']
+                    }
+                    done_unit_numbers.append(item['unit_number'])
 
-                report_data[TYPES[str(item['type'])]] = value
+                    for jitem in data:
+                        if item['unit_number'] ==  jitem['unit_number']:
+                            jitem_data[TYPES[jitem['data_type']]] = jitem['data_value__sum']
 
-        import math
-        report_data['daily_cooking_time'] = report_data['left_stove_cooktime'] + report_data['right_stove_cooktime']
-        report_data['daily_cooking_time'] = math.ceil(report_data['daily_cooking_time'] * 100) / 100.0
-        report_data['average_power_consumption_per_use'] = report_data['daily_power_consumption'] / report_data['stove_on_off_count']
-        report_data['average_power_consumption_per_use'] = math.ceil(report_data['average_power_consumption_per_use'] * 100) / 100.0
-        report_data['average_cooking_time_per_use'] = report_data['daily_cooking_time'] / report_data['stove_on_off_count']
-        report_data['average_cooking_time_per_use'] = math.ceil(report_data['average_cooking_time_per_use'] * 100) / 100.0
+                    jitem_data['serial_number'] = item['unit_number']
+                    jitem_data['daily_cooking_time'] = jitem_data['left_stove_cooktime'] + jitem_data['right_stove_cooktime']
+                    jitem_data['daily_cooking_time'] = math.ceil(jitem_data['daily_cooking_time'] * 100) / 100.0
+                    jitem_data['average_power_consumption_per_use'] = jitem_data['daily_power_consumption'] / jitem_data['stove_on_off_count']
+                    jitem_data['average_power_consumption_per_use'] = math.ceil(jitem_data['average_power_consumption_per_use'] * 100) / 100.0
+                    jitem_data['average_cooking_time_per_use'] = jitem_data['daily_cooking_time'] / jitem_data['stove_on_off_count']
+                    jitem_data['average_cooking_time_per_use'] = math.ceil(jitem_data['average_cooking_time_per_use'] * 100) / 100.0
 
-        context['data'] = [report_data]
+                    report_data.append(jitem_data)            
+
+            context['data'] = report_data
 
         return context

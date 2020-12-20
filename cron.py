@@ -63,6 +63,11 @@ for unit_number in unit_numbers:
         from_when_dt='{}T00:00:00+00:00'.format(str(from_date)),
         to_when_dt='{}T00:00:00+00:00'.format(str(today))
     )
+    # get_usage_data(
+    #     unit_number=unit_number['unit_number'],
+    #     from_when_dt='{}T00:00:00+00:00'.format('2020-12-18'),
+    #     to_when_dt='{}T00:00:00+00:00'.format('2020-12-19')
+    # )
 
 cursor = db.cursor()
 cursor.executemany(

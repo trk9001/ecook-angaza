@@ -25,6 +25,7 @@
         <table class="table table-striped table-bordered table-hover">
             <tr>
                 <th>Serial Number</th>
+                <th>Date</th>
                 <th>Daily Power Consumption (KWh)</th>
                 <th>Left Stove Cooking Time</th>
                 <th>Right Stove Cooking Time</th>
@@ -37,6 +38,7 @@
             {% for item in data %}
                 <tr>
                     <td>{{ item.serial_number }}</td>
+                    <td>{{ item.when_datetime }}</td>
                     <td>{{ item.daily_power_consumption }}</td>
                     <td>{{ item.left_stove_cooktime }}</td>
                     <td>{{ item.right_stove_cooktime }}</td>

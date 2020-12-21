@@ -2,16 +2,17 @@ import datetime, re
 from mysql.connector import connect
 from angaza import Angaza
 
-def get_usage_data(unit_number: int, from_when_dt: str, to_when_dt: str = None, offset: int = 0):
+query_params = []
+
+def get_usage_data(unit_number: int, from_when_dt: str, offset: int = 0):
     data = angaza.get_usage_data(
         unit_number=unit_number,
         from_when_dt=from_when_dt,
-        to_when_dt=to_when_dt,
         offset=offset
     )
 
     if '_embedded' in data and len(data['_embedded']['item']) > 0:
-        for item in data['samples']:
+        for item in data['_embedded']['item']:
             query_params.append(
                 (
                     unit_number,
@@ -28,7 +29,7 @@ def get_usage_data(unit_number: int, from_when_dt: str, to_when_dt: str = None, 
             offset = re.search('&offset=(.*)', link)
 
             if offset and offset > 0:
-                get_usage_data(unit_number=unit_number, from_when_dt=from_when_dt, to_when_dt=to_when_dt, offset=offset)
+                get_usage_data(unit_number=unit_number, from_when_dt=from_when_dt, offset=offset)
 
 DB_HOST = 'localhost'
 DB_PORT = 3306
@@ -36,7 +37,6 @@ DB_USER = 'root'
 DB_PASSWORD = 'root'
 DB_NAME = 'db_integration_angaza_data'
 
-query_params = []
 today = datetime.date.today()
 delta = datetime.timedelta(days=1)
 from_date = today - delta
@@ -60,14 +60,8 @@ angaza.set_auth(username='atec_iot', password='U*p9fJi31$$X')
 for unit_number in unit_numbers:
     get_usage_data(
         unit_number=unit_number['unit_number'],
-        from_when_dt='{}T00:00:00+00:00'.format(str(from_date)),
-        to_when_dt='{}T00:00:00+00:00'.format(str(today))
+        from_when_dt='{}T01:00:00+00:00'.format(from_date)
     )
-    # get_usage_data(
-    #     unit_number=unit_number['unit_number'],
-    #     from_when_dt='{}T00:00:00+00:00'.format('2020-12-18'),
-    #     to_when_dt='{}T00:00:00+00:00'.format('2020-12-19')
-    # )
 
 cursor = db.cursor()
 cursor.executemany(

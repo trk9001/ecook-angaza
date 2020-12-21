@@ -63,13 +63,19 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                         if item['unit_number'] ==  jitem['unit_number']:
                             jitem_data[TYPES[jitem['data_type']]] = jitem['data_value__sum']
 
+                    jitem_data['average_power_consumption_per_use'] = 0
+                    jitem_data['average_cooking_time_per_use'] = 0
                     jitem_data['serial_number'] = item['unit_number']
                     jitem_data['daily_cooking_time'] = jitem_data['left_stove_cooktime'] + jitem_data['right_stove_cooktime']
                     jitem_data['daily_cooking_time'] = math.ceil(jitem_data['daily_cooking_time'] * 100) / 100.0
-                    jitem_data['average_power_consumption_per_use'] = jitem_data['daily_power_consumption'] / jitem_data['stove_on_off_count']
-                    jitem_data['average_power_consumption_per_use'] = math.ceil(jitem_data['average_power_consumption_per_use'] * 100) / 100.0
-                    jitem_data['average_cooking_time_per_use'] = jitem_data['daily_cooking_time'] / jitem_data['stove_on_off_count']
-                    jitem_data['average_cooking_time_per_use'] = math.ceil(jitem_data['average_cooking_time_per_use'] * 100) / 100.0
+
+                    if 'stove_on_off_count' in jitem_data:
+                        jitem_data['average_power_consumption_per_use'] = jitem_data['daily_power_consumption'] / jitem_data['stove_on_off_count']
+                        jitem_data['average_cooking_time_per_use'] = jitem_data['daily_cooking_time'] / jitem_data['stove_on_off_count']
+                        jitem_data['average_power_consumption_per_use'] = math.ceil(jitem_data['average_power_consumption_per_use'] * 100) / 100.0
+                        jitem_data['average_cooking_time_per_use'] = math.ceil(jitem_data['average_cooking_time_per_use'] * 100) / 100.0
+                    else:
+                        jitem_data['stove_on_off_count'] = 0
 
                     report_data.append(jitem_data)            
 

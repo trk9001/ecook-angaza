@@ -8,14 +8,14 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-md-12">
-            <form method="get">
-                <div class="form-group">
-                    <input type="text" name="daterange" id="daterange" class="form-control">
+        <div class="col-md-6 offset-md-6 float-right ">
+            <form method="get" class="row d-flex align-items-center justify-content-between">
+                <div class="form-group col-md-8">
+                    <input type="text" name="daterange" id="daterange" class="form-control" style="min-width: 280px;">
                 </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success">Search</button>
+                <div class="form-group col-md-4 w-100">
+                    <button type="submit" class="btn btn-success d-block w-100">Search</button>
                 </div>
             </form>
         </div>

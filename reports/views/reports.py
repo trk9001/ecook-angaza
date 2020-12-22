@@ -32,6 +32,7 @@ class ReportsView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         done_unit_numbers = []
         report_data = []
+        quick_statistics = {}
         prev_stove_on_off_count = 0
         context = super().get_context_data(**kwargs)
         request = self.request
@@ -75,7 +76,10 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                             if jitem['data_type'] != '228' and jitem['data_type'] != '219':
                                 jitem_data[TYPES[jitem['data_type']]] += float(jitem['data_value'])
                             else:
-                                jitem_data[TYPES[jitem['data_type']]] = jitem['data_value']
+                                if jitem['data_type'] == '219':
+                                    jitem_data[TYPES[jitem['data_type']]] = item['unit_number']
+                                else:
+                                    jitem_data[TYPES[jitem['data_type']]] = jitem['data_value']
 
                     report_data.append(jitem_data)            
 
@@ -99,6 +103,36 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                     item['average_power_consumption_per_use'] = math.ceil(item['average_power_consumption_per_use'] * 100) / 100.0
                     item['average_cooking_time_per_use'] = math.ceil(item['average_cooking_time_per_use'] * 100) / 100.0
 
+            for item in report_data:
+                daily_power_consumption = [float(jitem['daily_power_consumption']) for jitem in report_data]
+                quick_statistics['average_power_consumption'] = sum(daily_power_consumption) / len(daily_power_consumption)
+                quick_statistics['average_power_consumption'] = math.ceil(quick_statistics['average_power_consumption'] * 100) / 100
+
+                left_stove_cooktime = [float(jitem['left_stove_cooktime']) for jitem in report_data]
+                quick_statistics['average_left_stove_cooktime'] = sum(left_stove_cooktime) / len(left_stove_cooktime)
+                quick_statistics['average_left_stove_cooktime'] = math.ceil(quick_statistics['average_left_stove_cooktime'] * 100) / 100
+
+                right_stove_cooktime = [float(jitem['right_stove_cooktime']) for jitem in report_data]
+                quick_statistics['average_right_stove_cooktime'] = sum(right_stove_cooktime) / len(right_stove_cooktime)
+                quick_statistics['average_right_stove_cooktime'] = math.ceil(quick_statistics['average_right_stove_cooktime'] * 100) / 100
+
+                daily_cooking_time = [float(jitem['daily_cooking_time']) for jitem in report_data]
+                quick_statistics['average_cooking_time'] = sum(daily_cooking_time) / len(daily_cooking_time)
+                quick_statistics['average_cooking_time'] = math.ceil(quick_statistics['average_cooking_time'] * 100) / 100
+
+                stove_on_off_count = [float(jitem['stove_on_off_count']) for jitem in report_data]
+                quick_statistics['average_stove_on_off_count'] = sum(stove_on_off_count) / len(stove_on_off_count)
+                quick_statistics['average_stove_on_off_count'] = math.ceil(quick_statistics['average_stove_on_off_count'] * 100) / 100
+
+                average_power_consumption_per_use = [float(jitem['average_power_consumption_per_use']) for jitem in report_data]
+                quick_statistics['average_power_consumption_per_use'] = sum(average_power_consumption_per_use) / len(average_power_consumption_per_use)
+                quick_statistics['average_power_consumption_per_use'] = math.ceil(quick_statistics['average_power_consumption_per_use'] * 100) / 100
+
+                average_cooking_time_per_use = [float(jitem['average_cooking_time_per_use']) for jitem in report_data]
+                quick_statistics['average_cooking_time_per_use'] = sum(average_cooking_time_per_use) / len(average_cooking_time_per_use)
+                quick_statistics['average_cooking_time_per_use'] = math.ceil(quick_statistics['average_cooking_time_per_use'] * 100) / 100
+
             context['data'] = report_data
+            context['quick_statistics'] = quick_statistics
 
         return context

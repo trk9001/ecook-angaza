@@ -19,36 +19,86 @@
                 </div>
             </form>
         </div>
-    </div>
-    
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered table-hover">
-            <tr>
-                <th>Serial Number</th>
-                <th>Date</th>
-                <th>Daily Power Consumption (KWh)</th>
-                <th>Left Stove Cooking Time</th>
-                <th>Right Stove Cooking Time</th>
-                <th>Daily Cooking Time</th>
-                <th>Stove On/Off Count</th>
-                <th>Average Power Consumption per use</th>
-                <th>Average Cooking time per use</th>
-            </tr>
 
-            {% for item in data %}
-                <tr>
-                    <td>{{ item.serial_number }}</td>
-                    <td>{{ item.when_datetime }}</td>
-                    <td>{{ item.daily_power_consumption }}</td>
-                    <td>{{ item.left_stove_cooktime }}</td>
-                    <td>{{ item.right_stove_cooktime }}</td>
-                    <td>{{ item.daily_cooking_time }}</td>
-                    <td>{{ item.stove_on_off_count }}</td>
-                    <td>{{ item.average_power_consumption_per_use }}</td>
-                    <td>{{ item.average_cooking_time_per_use }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">Quick Statistics</div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Average Power Consumption (KWh)</strong></p>
+                                    <p><strong>Average Left Stove Cooking Time</strong></p>
+                                    <p><strong>Average Right Stove Cooking Time</strong></p>
+                                    <p><strong>Average Cooking Time</strong></p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p>{{ quick_statistics.average_power_consumption }}</p>
+                                    <p>{{ quick_statistics.average_left_stove_cooktime }}</p>
+                                    <p>{{ quick_statistics.average_right_stove_cooktime }}</p>
+                                    <p>{{ quick_statistics.average_cooking_time }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Average Stove On/Off Count</strong></p>
+                                    <p><strong>Average Power Consumption per use</strong></p>
+                                    <p><strong>Average Cooking time per use</strong></p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p>{{ quick_statistics.average_stove_on_off_count }}</p>
+                                    <p>{{ quick_statistics.average_power_consumption_per_use }}</p>
+                                    <p>{{ quick_statistics.average_cooking_time_per_use }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover">
+                    <tr>
+                        <th>Serial Number</th>
+                        <th>Date</th>
+                        <th>Daily Power Consumption (KWh)</th>
+                        <th>Left Stove Cooking Time</th>
+                        <th>Right Stove Cooking Time</th>
+                        <th>Daily Cooking Time</th>
+                        <th>Stove On/Off Count</th>
+                        <th>Average Power Consumption per use</th>
+                        <th>Average Cooking time per use</th>
+                    </tr>
+
+                    {% for item in data %}
+                        <tr>
+                            <td>{{ item.serial_number }}</td>
+                            <td>{{ item.when_datetime }}</td>
+                            <td>{{ item.daily_power_consumption }}</td>
+                            <td>{{ item.left_stove_cooktime }}</td>
+                            <td>{{ item.right_stove_cooktime }}</td>
+                            <td>{{ item.daily_cooking_time }}</td>
+                            <td>{{ item.stove_on_off_count }}</td>
+                            <td>{{ item.average_power_consumption_per_use }}</td>
+                            <td>{{ item.average_cooking_time_per_use }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock body %}
 

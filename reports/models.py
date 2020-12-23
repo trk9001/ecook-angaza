@@ -41,3 +41,22 @@ class UsageData(models.Model):
         types['232'] = 'Other'
 
         return types[self.data_type]
+
+
+class DailyUsageData(models.Model):
+    serial_number = models.PositiveIntegerField()
+    average_battery_voltage = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0.00)
+    max_battery_voltage = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0.00)
+    min_battery_voltage = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0.00)
+    battery_critical_state_count = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0.00)
+    one_hour_samples_count = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0.00)
+    lock_mode_entry_count = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0.00)
+    factory_mode_entry_count = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0.00)
+    gsm_sync_button_count = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0.00)
+    stove_on_off_count = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0.00)
+    daily_power_consumption = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0.00)
+    left_stove_cooktime = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0.00)
+    right_stove_cooktime = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0.00)
+    others = models.DecimalField(max_digits=10, decimal_places=2, blank=True, default=0.00)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

@@ -1,37 +1,37 @@
-import datetime, re
+import datetime, re, math
 from dateutil.relativedelta import relativedelta
 from mysql.connector import connect
 from angaza import Angaza
 
-query_params = []
-
-def get_usage_data(unit_number: int, from_when_dt: str, to_when_dt: str, offset: int = 0):
+def get_usage_data(unit_number: int, from_when_dt: str, to_when_dt: str=str(), offset: int = 0, variable = []):
     data = angaza.get_usage_data(
         unit_number=unit_number,
         from_when_dt=from_when_dt,
-        to_when_dt=to_when_dt,
         offset=offset
     )
 
+    if to_when_dt != '':
+        data = angaza.get_usage_data(
+            unit_number=unit_number,
+            from_when_dt=from_when_dt,
+            to_when_dt=to_when_dt,
+            offset=offset
+        )
+
     if '_embedded' in data and len(data['_embedded']['item']) > 0:
-        for item in data['_embedded']['item']:
-            query_params.append(
-                (
-                    unit_number,
-                    datetime.datetime.strptime(item['when'], '%Y-%m-%dT%H:%M:%Sz'),
-                    item['type'],
-                    item['value'],
-                    datetime.datetime.now(),
-                    datetime.datetime.now(),
-                )
-            )
+        variable += data['_embedded']['item']
 
         if '_links' in data and 'next' in data['_links']:
             link = data['_links']['next']['href']
             offset = re.search('&offset=(.*)', link)
 
             if offset and offset > 0:
-                get_usage_data(unit_number=unit_number, from_when_dt=from_when_dt, to_when_dt=to_when_dt, offset=offset)
+                if to_when_dt != '':
+                    get_usage_data(unit_number=unit_number, from_when_dt=from_when_dt, to_when_dt=to_when_dt, offset=offset, variable=variable)
+                else:
+                    get_usage_data(unit_number=unit_number, from_when_dt=from_when_dt, offset=offset, variable=variable)
+
+    return variable
 
 DB_HOST = 'localhost'
 DB_PORT = 3306
@@ -39,6 +39,7 @@ DB_USER = 'root'
 DB_PASSWORD = 'root'
 DB_NAME = 'db_integration_angaza_data'
 
+query_params = []
 current_date = datetime.date.today()
 current_month = current_date.month
 current_year = current_date.year
@@ -67,9 +68,14 @@ for unit_number in unit_numbers:
 
     print(message)
 
-    for _ in range(1, 12):
+    for i in range(1, 12):
+        data = list()
         next = relativedelta(months=1)
-        to_month = from_month + next
+
+        if i > 1:
+            to_month = (from_month + next) - relativedelta(days=1)
+        else:
+            to_month = from_month + next
 
         if to_month.year == current_year and to_month.month <= current_month:
             print('Running from ' + datetime.datetime.strftime(from_month, '%Y-%m-%d') + ' to ' + datetime.datetime.strftime(to_month, '%Y-%m-%d'))
@@ -78,29 +84,76 @@ for unit_number in unit_numbers:
                 unit_number=unit_number['unit_number'],
                 from_when_dt='{}T01:00:00+00:00'.format(datetime.datetime.strftime(from_month, '%Y-%m-%d')),
                 to_when_dt='{}T01:00:00+00:00'.format(datetime.datetime.strftime(to_month, '%Y-%m-%d')),
+                variable=data
             )
 
-            from_month = to_month
+            print(str(len(data)) + ' data found')
+
+            if len(data) > 0:
+                for item in data:
+                    query_params.append(
+                        (
+                            unit_number['unit_number'],
+                            datetime.datetime.strptime(item['when'], '%Y-%m-%dT%H:%M:%Sz'),
+                            item['type'],
+                            item['value'],
+                            datetime.datetime.now(),
+                            datetime.datetime.now(),
+                        )
+                    )
+
+            from_month = to_month + relativedelta(days=1)
         else:
             break
 
     if from_month.month  < current_day:
-        print('Running from ' + datetime.datetime.strftime(from_month, '%Y-%m-%d') + ' to ' + str(current_date))
+        data = list()
+        to_when_dt = str(current_date - relativedelta(days=1))
+        print('Running from ' + datetime.datetime.strftime(from_month, '%Y-%m-%d') + ' to ' + to_when_dt)
         
         get_usage_data(
             unit_number=unit_number['unit_number'],
             from_when_dt='{}T01:00:00+00:00'.format(datetime.datetime.strftime(from_month, '%Y-%m-%d')),
-            to_when_dt='{}T01:00:00+00:00'.format(str(current_date)),
+            to_when_dt='{}T01:00:00+00:00'.format(to_when_dt),
+            variable=data
         )
+
+        print(str(len(data)) + ' data found')
+
+        if len(data) > 0:
+            for item in data:
+                query_params.append(
+                    (
+                        unit_number['unit_number'],
+                        datetime.datetime.strptime(item['when'], '%Y-%m-%dT%H:%M:%Sz'),
+                        item['type'],
+                        item['value'],
+                        datetime.datetime.now(),
+                        datetime.datetime.now(),
+                    )
+                )
 
     for _ in range(len(message)):
         separator += '-'
 
     print(separator)
 
-cursor = db.cursor()
-cursor.executemany(
-    query,
-    query_params
-)
-db.commit()
+if len(query_params) > 0:
+    cursor = db.cursor()
+    step = 25000
+    start_position = 0
+    end_position = step
+    
+    for _ in range(0, math.ceil(len(query_params) / step)):
+        temp_query_params = query_params[start_position:end_position]
+        
+        cursor.executemany(
+            query,
+            temp_query_params
+        )
+
+        start_position += step
+        end_position += step
+    db.commit()
+
+print('Total ' + str(len(query_params)) + ' data was inserted')

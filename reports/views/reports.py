@@ -96,6 +96,7 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                 item['average_cooking_time_per_use'] = 0
                 item['daily_cooking_time'] = item['left_stove_cooktime'] + item['right_stove_cooktime']
                 item['daily_cooking_time'] = math.ceil(item['daily_cooking_time'] * 100) / 100.0
+                item['daily_power_consumption'] = math.ceil((item['daily_power_consumption'] / 1000) * 100) / 100
                 
                 if float(item['stove_on_off_count']) > 0:
                     item['average_power_consumption_per_use'] = item['daily_power_consumption'] / float(item['stove_on_off_count'])
@@ -104,8 +105,8 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                     item['average_cooking_time_per_use'] = math.ceil(item['average_cooking_time_per_use'] * 100) / 100.0
 
             for item in report_data:
-                daily_power_consumption = [float(jitem['daily_power_consumption']) for jitem in report_data]
-                quick_statistics['average_power_consumption'] = sum(daily_power_consumption) / len(daily_power_consumption)
+                daily_power_consumption_list = [float(jitem['daily_power_consumption']) for jitem in report_data]
+                quick_statistics['average_power_consumption'] = sum(daily_power_consumption_list) / len(daily_power_consumption_list)
                 quick_statistics['average_power_consumption'] = math.ceil(quick_statistics['average_power_consumption'] * 100) / 100
 
                 left_stove_cooktime = [float(jitem['left_stove_cooktime']) for jitem in report_data]

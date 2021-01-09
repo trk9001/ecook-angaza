@@ -27,36 +27,44 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p><strong>Average Power Consumption (KWh)</strong></p>
-                                    <p><strong>Average Left Stove Cooking Time</strong></p>
-                                    <p><strong>Average Right Stove Cooking Time</strong></p>
-                                    <p><strong>Average Cooking Time</strong></p>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <p>{{ quick_statistics.average_power_consumption }}</p>
-                                    <p>{{ quick_statistics.average_left_stove_cooktime }}</p>
-                                    <p>{{ quick_statistics.average_right_stove_cooktime }}</p>
-                                    <p>{{ quick_statistics.average_cooking_time }}</p>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tr>
+                                        <td><strong>Average Power Consumption (KWh)</strong></td>
+                                        <td>{{ quick_statistics.average_power_consumption }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Average Left Stove Cooking Time</strong></td>
+                                        <td>{{ quick_statistics.average_left_stove_cooktime }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Average Right Stove Cooking Time</strong></td>
+                                        <td>{{ quick_statistics.average_right_stove_cooktime }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Average Cooking Time</strong></td>
+                                        <td>{{ quick_statistics.average_cooking_time }}</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
 
                         <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p><strong>Average Stove On/Off Count</strong></p>
-                                    <p><strong>Average Power Consumption per use</strong></p>
-                                    <p><strong>Average Cooking time per use</strong></p>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <p>{{ quick_statistics.average_stove_on_off_count }}</p>
-                                    <p>{{ quick_statistics.average_power_consumption_per_use }}</p>
-                                    <p>{{ quick_statistics.average_cooking_time_per_use }}</p>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tr>
+                                        <td><strong>Average Stove On/Off Count</strong></td>
+                                        <td>{{ quick_statistics.average_stove_on_off_count }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Average Power Consumption per use</strong></td>
+                                        <td>{{ quick_statistics.average_power_consumption_per_use }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Average Cooking time per use</strong></td>
+                                        <td>{{ quick_statistics.average_cooking_time_per_use }}</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>

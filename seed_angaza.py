@@ -63,58 +63,28 @@ angaza.set_auth(username='atec_iot', password='U*p9fJi31$$X')
 
 for unit_number in unit_numbers:
     separator = str()
+    i = 1
+    next = relativedelta(months=1)
     from_month = datetime.datetime.strptime('2020-01-01', '%Y-%m-%d')
+    to_month = from_month + next
     message = 'Fetching data of unit number - ' + str(unit_number['unit_number'])
 
     print(message)
 
-    for i in range(1, 12):
+    while to_month.year <= current_year and to_month.date() <= current_date:
         data = list()
-        next = relativedelta(months=1)
 
         if i > 1:
             to_month = (from_month + next) - relativedelta(days=1)
         else:
             to_month = from_month + next
+            
+        print('Running from ' + datetime.datetime.strftime(from_month, '%Y-%m-%d') + ' to ' + datetime.datetime.strftime(to_month, '%Y-%m-%d'))
 
-        if to_month.year == current_year and to_month.month <= current_month:
-            print('Running from ' + datetime.datetime.strftime(from_month, '%Y-%m-%d') + ' to ' + datetime.datetime.strftime(to_month, '%Y-%m-%d'))
-
-            get_usage_data(
-                unit_number=unit_number['unit_number'],
-                from_when_dt='{}T01:00:00+00:00'.format(datetime.datetime.strftime(from_month, '%Y-%m-%d')),
-                to_when_dt='{}T01:00:00+00:00'.format(datetime.datetime.strftime(to_month, '%Y-%m-%d')),
-                variable=data
-            )
-
-            print(str(len(data)) + ' data found')
-
-            if len(data) > 0:
-                for item in data:
-                    query_params.append(
-                        (
-                            unit_number['unit_number'],
-                            datetime.datetime.strptime(item['when'], '%Y-%m-%dT%H:%M:%Sz'),
-                            item['type'],
-                            item['value'],
-                            datetime.datetime.now(),
-                            datetime.datetime.now(),
-                        )
-                    )
-
-            from_month = to_month + relativedelta(days=1)
-        else:
-            break
-
-    if from_month.month  < current_day:
-        data = list()
-        to_when_dt = str(current_date - relativedelta(days=1))
-        print('Running from ' + datetime.datetime.strftime(from_month, '%Y-%m-%d') + ' to ' + to_when_dt)
-        
         get_usage_data(
             unit_number=unit_number['unit_number'],
             from_when_dt='{}T01:00:00+00:00'.format(datetime.datetime.strftime(from_month, '%Y-%m-%d')),
-            to_when_dt='{}T01:00:00+00:00'.format(to_when_dt),
+            to_when_dt='{}T01:00:00+00:00'.format(datetime.datetime.strftime(to_month, '%Y-%m-%d')),
             variable=data
         )
 
@@ -132,6 +102,9 @@ for unit_number in unit_numbers:
                         datetime.datetime.now(),
                     )
                 )
+
+        from_month = to_month + relativedelta(days=1)
+        i+=1
 
     for _ in range(len(message)):
         separator += '-'

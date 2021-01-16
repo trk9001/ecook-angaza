@@ -36,8 +36,8 @@ def get_usage_data(unit_number: int, from_when_dt: str, to_when_dt: str=str(), o
 DB_HOST = 'localhost'
 DB_PORT = 3306
 DB_USER = 'root'
-DB_PASSWORD = 'root'
-DB_NAME = 'db_integration_angaza_data'
+DB_PASSWORD = 'Atec$2020'
+DB_NAME = 'db_angaza'
 
 query_params = []
 current_date = datetime.date.today()
@@ -77,7 +77,7 @@ for unit_number in unit_numbers:
         else:
             to_month = from_month + next
 
-        if to_month.year == current_year and to_month.month <= current_month:
+        if to_month.year <= current_year: #and to_month.month <= current_month:
             print('Running from ' + datetime.datetime.strftime(from_month, '%Y-%m-%d') + ' to ' + datetime.datetime.strftime(to_month, '%Y-%m-%d'))
 
             get_usage_data(
@@ -106,7 +106,7 @@ for unit_number in unit_numbers:
         else:
             break
 
-    if from_month.month  < current_day:
+    if from_month.year <= current_year and from_month.day  < current_day and from_month.year <= current_year:
         data = list()
         to_when_dt = str(current_date - relativedelta(days=1))
         print('Running from ' + datetime.datetime.strftime(from_month, '%Y-%m-%d') + ' to ' + to_when_dt)

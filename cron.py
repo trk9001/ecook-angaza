@@ -34,8 +34,7 @@ def get_usage_data(unit_number: int, from_when_dt: str, offset: int = 0):
 DB_HOST = 'localhost'
 DB_PORT = 3306
 DB_USER = 'root'
-DB_PASSWORD = 'root'
-DB_NAME = 'db_integration_angaza_data'
+DB_PASSWORD = 'Atec$2020'                                                                                               DB_NAME = 'db_angaza'
 
 today = datetime.date.today()
 delta = datetime.timedelta(days=1)

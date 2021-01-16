@@ -35,7 +35,7 @@ SECRET_KEY = '(h61v$pur3#$b#vhjf^pvhy8yga@@h6pnwxc%n0^3$t)c25r%a'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['51.79.145.161']
 
 
 # Application definition

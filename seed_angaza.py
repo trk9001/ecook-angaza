@@ -63,6 +63,7 @@ angaza.set_auth(username='atec_iot', password='U*p9fJi31$$X')
 
 for unit_number in unit_numbers:
     separator = str()
+    end = False
     i = 1
     next = relativedelta(months=1)
     from_month = datetime.datetime.strptime('2020-01-01', '%Y-%m-%d')
@@ -71,13 +72,17 @@ for unit_number in unit_numbers:
 
     print(message)
 
-    while to_month.year <= current_year and to_month.date() <= current_date:
+    while to_month.year <= current_year and to_month.date() <= current_date and not end:
         data = list()
 
         if i > 1:
             to_month = (from_month + next) - relativedelta(days=1)
         else:
             to_month = from_month + next
+
+        if to_month.date() > current_date:
+            end = True
+            to_month = datetime.datetime.today()
             
         print('Running from ' + datetime.datetime.strftime(from_month, '%Y-%m-%d') + ' to ' + datetime.datetime.strftime(to_month, '%Y-%m-%d'))
 

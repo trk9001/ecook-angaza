@@ -57,6 +57,8 @@ unit_numbers = select_cursor.fetchall()
 angaza.set_auth(username='atec_iot', password='U*p9fJi31$$X')
 
 for unit_number in unit_numbers:
+    print('Fetching data of unit number - ' + str(unit_number['unit_number']) + ' for ' + datetime.datetime.strftime(from_date, '%Y-%m-%d'))
+
     get_usage_data(
         unit_number=unit_number['unit_number'],
         from_when_dt='{}T01:00:00+00:00'.format(from_date)
@@ -68,3 +70,5 @@ cursor.executemany(
     query_params
 )
 db.commit()
+
+print('Total ' + str(len(query_params)) + ' data was inserted')

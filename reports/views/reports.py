@@ -1,7 +1,7 @@
 import datetime, math
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from reports.models import UsageData
+from reports.models import UsageData, UnitNumber
 
 
 TYPES = {
@@ -33,12 +33,14 @@ class ReportsView(LoginRequiredMixin, TemplateView):
         done_unit_numbers = []
         report_data = []
         quick_statistics = {}
+        query_params = {}
         prev_stove_on_off_count = 0
         context = super().get_context_data(**kwargs)
         request = self.request
 
         if 'daterange' in request.GET:
             daterange = request.GET['daterange']
+            query_params['daterange'] = daterange
             daterange_splitted = daterange.split(' - ')
             from_date = daterange_splitted[0]
             from_date = datetime.datetime.strptime(from_date, '%m/%d/%Y').date()
@@ -46,11 +48,16 @@ class ReportsView(LoginRequiredMixin, TemplateView):
             to_date = daterange_splitted[1]
             to_date = datetime.datetime.strptime(to_date, '%m/%d/%Y').date()
             to_date = str(to_date) + ' 23:59:00'
+            usage_data_filter = {
+                'when_datetime__gte': from_date,
+                'when_datetime__lte': to_date
+            }
 
-            data = UsageData.objects.filter(
-                when_datetime__gte=from_date,
-                when_datetime__lte=to_date,
-            ).values(
+            if 'unit_number' in request.GET and request.GET['unit_number'] != 'all':
+                usage_data_filter['unit_number'] = request.GET['unit_number']
+                query_params['unit_number'] = request.GET['unit_number']
+
+            data = UsageData.objects.filter(**usage_data_filter).values(
                 'unit_number',
                 'data_type',
                 'when_datetime__date',
@@ -106,8 +113,11 @@ class ReportsView(LoginRequiredMixin, TemplateView):
 
             for item in report_data:
                 daily_power_consumption_list = [float(jitem['daily_power_consumption']) for jitem in report_data]
+                daily_power_consumption_list_exclude_zero_list = [float(jitem['daily_power_consumption']) for jitem in report_data if jitem['daily_power_consumption'] > 0]
                 quick_statistics['average_power_consumption'] = sum(daily_power_consumption_list) / len(daily_power_consumption_list)
                 quick_statistics['average_power_consumption'] = math.ceil(quick_statistics['average_power_consumption'] * 100) / 100
+                quick_statistics['average_power_consumption_exclude_zero'] = sum(daily_power_consumption_list_exclude_zero_list) / len(daily_power_consumption_list_exclude_zero_list)
+                quick_statistics['average_power_consumption_exclude_zero'] = math.ceil(quick_statistics['average_power_consumption_exclude_zero'] * 100) / 100
 
                 left_stove_cooktime = [float(jitem['left_stove_cooktime']) for jitem in report_data]
                 quick_statistics['average_left_stove_cooktime'] = sum(left_stove_cooktime) / len(left_stove_cooktime)
@@ -135,5 +145,8 @@ class ReportsView(LoginRequiredMixin, TemplateView):
 
             context['data'] = report_data
             context['quick_statistics'] = quick_statistics
+            
+        context['unit_numbers'] = UnitNumber.objects.all().order_by('unit_number')
+        context['query_params'] = query_params
 
         return context

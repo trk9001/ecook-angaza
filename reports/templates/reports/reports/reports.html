@@ -9,16 +9,28 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-md-6 offset-md-6 float-right ">
+        <div class="col-md-12">
             <form method="get" class="row d-flex align-items-center justify-content-between">
-                <div class="form-group col-md-8">
+                <div class="form-group col-md-6">
                     <div class="input-group">
-                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                        <input type="text" name="daterange" id="daterange" class="form-control" style="min-width: 280px;">
+                        <span class="input-group-text">Unit/Serial Numbers</span>
+                        <select name="unit_number" id="id_unit_number" class="form-control" style="min-width: 280px;">
+                            <option value="all">All</option>
+                            {% for unit_number in unit_numbers %}
+                                <option value="{{ unit_number.unit_number }}" {% if 'unit_number' in query_params and query_params.unit_number == unit_number.unit_number|stringformat:"i" %}selected{% endif %}>{{ unit_number.unit_number }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
 
-                <div class="form-group col-md-4 w-100">
+                <div class="form-group col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                        <input type="text" name="daterange" id="daterange" class="form-control" style="min-width: 280px;" {% if 'daterange' in query_params and query_params.daterange != '' %}value="{{ query_params.daterange }}"{% endif %}>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-2 w-100">
                     <button type="submit" class="btn btn-success d-block w-100">Search</button>
                 </div>
             </form>
@@ -34,20 +46,23 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <tr>
-                                        <td><strong>Average Power Consumption (KWh)</strong></td>
+                                        <td><strong>Average Power Consumption (KWh / day)</strong></td>
                                         <td>{{ quick_statistics.average_power_consumption }}</td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Average Left Stove Cooking Time</strong></td>
+                                        <td>
+                                            <p><strong>Average Power Consumption (KWh / day)</strong></p>
+                                            <small><strong>Excluding non-use days</strong></small>
+                                        </td>
+                                        <td>{{ quick_statistics.average_power_consumption_exclude_zero }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Average Left Stove Cooking Time (Min / day)</strong></td>
                                         <td>{{ quick_statistics.average_left_stove_cooktime }}</td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Average Right Stove Cooking Time</strong></td>
+                                        <td><strong>Average Right Stove Cooking Time (Min / day)</strong></td>
                                         <td>{{ quick_statistics.average_right_stove_cooktime }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Average Cooking Time</strong></td>
-                                        <td>{{ quick_statistics.average_cooking_time }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -57,15 +72,19 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <tr>
-                                        <td><strong>Average Stove On/Off Count</strong></td>
+                                        <td><strong>Average Cooking Time (Min / day)</strong></td>
+                                        <td>{{ quick_statistics.average_cooking_time }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Average Stove On/Off Count (Per day)</strong></td>
                                         <td>{{ quick_statistics.average_stove_on_off_count }}</td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Average Power Consumption per use</strong></td>
+                                        <td><strong>Average Power Consumption per use (KWh)</strong></td>
                                         <td>{{ quick_statistics.average_power_consumption_per_use }}</td>
                                     </tr>
                                     <tr>
-                                        <td><strong>Average Cooking time per use</strong></td>
+                                        <td><strong>Average Cooking time per use (Min)</strong></td>
                                         <td>{{ quick_statistics.average_cooking_time_per_use }}</td>
                                     </tr>
                                 </table>
@@ -85,7 +104,7 @@
                 <table class="table table-striped table-bordered table-hover">
                     <tr>
                         <th>Serial Number</th>
-                        <th>Date</th>
+                        <th width="15%">Date</th>
                         <th>Daily Power Consumption (KWh)</th>
                         <th>Left Stove Cooking Time</th>
                         <th>Right Stove Cooking Time</th>

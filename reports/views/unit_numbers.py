@@ -12,6 +12,7 @@ class UnitNumberListView(LoginRequiredMixin, ListView):
     template_name = 'reports/unit_numbers/list.html'
     model = UnitNumber
     context_object_name = 'unit_numbers'
+    ordering = 'unit_number'
 
 
 class UnitNumberCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):

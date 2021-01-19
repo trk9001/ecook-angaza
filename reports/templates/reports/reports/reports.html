@@ -38,16 +38,19 @@
                                         <td>{{ quick_statistics.average_power_consumption }}</td>
                                     </tr>
                                     <tr>
+                                        <td>
+                                            <p><strong>Average Power Consumption (KWh / day)</strong></p>
+                                            <small><strong>Excluding non-use days</strong></small>
+                                        </td>
+                                        <td>{{ quick_statistics.average_power_consumption_exclude_zero }}</td>
+                                    </tr>
+                                    <tr>
                                         <td><strong>Average Left Stove Cooking Time (Min / day)</strong></td>
                                         <td>{{ quick_statistics.average_left_stove_cooktime }}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Average Right Stove Cooking Time (Min / day)</strong></td>
                                         <td>{{ quick_statistics.average_right_stove_cooktime }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Average Cooking Time (Min / day)</strong></td>
-                                        <td>{{ quick_statistics.average_cooking_time }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -56,6 +59,10 @@
                         <div class="col-md-6">
                             <div class="table-responsive">
                                 <table class="table">
+                                    <tr>
+                                        <td><strong>Average Cooking Time (Min / day)</strong></td>
+                                        <td>{{ quick_statistics.average_cooking_time }}</td>
+                                    </tr>
                                     <tr>
                                         <td><strong>Average Stove On/Off Count (Per day)</strong></td>
                                         <td>{{ quick_statistics.average_stove_on_off_count }}</td>

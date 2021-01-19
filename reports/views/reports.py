@@ -106,8 +106,11 @@ class ReportsView(LoginRequiredMixin, TemplateView):
 
             for item in report_data:
                 daily_power_consumption_list = [float(jitem['daily_power_consumption']) for jitem in report_data]
+                daily_power_consumption_list_exclude_zero_list = [float(jitem['daily_power_consumption']) for jitem in report_data if jitem['daily_power_consumption'] > 0]
                 quick_statistics['average_power_consumption'] = sum(daily_power_consumption_list) / len(daily_power_consumption_list)
                 quick_statistics['average_power_consumption'] = math.ceil(quick_statistics['average_power_consumption'] * 100) / 100
+                quick_statistics['average_power_consumption_exclude_zero'] = sum(daily_power_consumption_list_exclude_zero_list) / len(daily_power_consumption_list_exclude_zero_list)
+                quick_statistics['average_power_consumption_exclude_zero'] = math.ceil(quick_statistics['average_power_consumption_exclude_zero'] * 100) / 100
 
                 left_stove_cooktime = [float(jitem['left_stove_cooktime']) for jitem in report_data]
                 quick_statistics['average_left_stove_cooktime'] = sum(left_stove_cooktime) / len(left_stove_cooktime)

@@ -1,0 +1,8 @@
+{% extends "error.html" %}
+{% load static %}
+
+{% block title %}500 - Server Error{% endblock title %}
+
+{% block body %}
+    <img src="{% static 'images/error-500.jpg' %}" alt="Error 500">
+{% endblock body %}

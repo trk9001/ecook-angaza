@@ -113,35 +113,59 @@ class ReportsView(LoginRequiredMixin, TemplateView):
 
             for item in report_data:
                 daily_power_consumption_list = [float(jitem['daily_power_consumption']) for jitem in report_data]
-                daily_power_consumption_list_exclude_zero_list = [float(jitem['daily_power_consumption']) for jitem in report_data if jitem['daily_power_consumption'] > 0]
+                daily_power_consumption_list_exclude_zero_list = [float(jitem['daily_power_consumption']) for jitem in report_data if float(jitem['daily_power_consumption']) > 0]
                 quick_statistics['average_power_consumption'] = sum(daily_power_consumption_list) / len(daily_power_consumption_list)
                 quick_statistics['average_power_consumption'] = math.ceil(quick_statistics['average_power_consumption'] * 100) / 100
                 quick_statistics['average_power_consumption_exclude_zero'] = sum(daily_power_consumption_list_exclude_zero_list) / len(daily_power_consumption_list_exclude_zero_list)
                 quick_statistics['average_power_consumption_exclude_zero'] = math.ceil(quick_statistics['average_power_consumption_exclude_zero'] * 100) / 100
 
                 left_stove_cooktime = [float(jitem['left_stove_cooktime']) for jitem in report_data]
+                left_stove_cooktime_exclude_zero_list = [float(jitem['left_stove_cooktime']) for jitem in report_data if float(jitem['left_stove_cooktime']) > 0]
                 quick_statistics['average_left_stove_cooktime'] = sum(left_stove_cooktime) / len(left_stove_cooktime)
                 quick_statistics['average_left_stove_cooktime'] = math.ceil(quick_statistics['average_left_stove_cooktime'] * 100) / 100
+                quick_statistics['average_left_stove_cooktime_exclude_zero'] = sum(left_stove_cooktime_exclude_zero_list) / len(left_stove_cooktime_exclude_zero_list)
+                quick_statistics['average_left_stove_cooktime_exclude_zero'] = math.ceil(quick_statistics['average_left_stove_cooktime_exclude_zero'] * 100) / 100
 
                 right_stove_cooktime = [float(jitem['right_stove_cooktime']) for jitem in report_data]
+                right_stove_cooktime_exclude_zero_list = [float(jitem['right_stove_cooktime']) for jitem in report_data if float(jitem['right_stove_cooktime']) > 0]
                 quick_statistics['average_right_stove_cooktime'] = sum(right_stove_cooktime) / len(right_stove_cooktime)
                 quick_statistics['average_right_stove_cooktime'] = math.ceil(quick_statistics['average_right_stove_cooktime'] * 100) / 100
+                quick_statistics['average_right_stove_cooktime_exclude_zero'] = sum(right_stove_cooktime_exclude_zero_list) / len(right_stove_cooktime_exclude_zero_list)
+                quick_statistics['average_right_stove_cooktime_exclude_zero'] = math.ceil(quick_statistics['average_right_stove_cooktime_exclude_zero'] * 100) / 100
 
                 daily_cooking_time = [float(jitem['daily_cooking_time']) for jitem in report_data]
+                daily_cooking_time_exclude_zero_list = [float(jitem['daily_cooking_time']) for jitem in report_data if float(jitem['daily_cooking_time']) > 0]
                 quick_statistics['average_cooking_time'] = sum(daily_cooking_time) / len(daily_cooking_time)
                 quick_statistics['average_cooking_time'] = math.ceil(quick_statistics['average_cooking_time'] * 100) / 100
+                quick_statistics['average_cooking_time_exclude_zero'] = sum(daily_cooking_time_exclude_zero_list) / len(daily_cooking_time_exclude_zero_list)
+                quick_statistics['average_cooking_time_exclude_zero'] = math.ceil(quick_statistics['average_cooking_time_exclude_zero'] * 100) / 100
 
                 stove_on_off_count = [float(jitem['stove_on_off_count']) for jitem in report_data]
+                stove_on_off_count_exclude_zero_list = [float(jitem['stove_on_off_count']) for jitem in report_data if float(jitem['stove_on_off_count']) > 0]
                 quick_statistics['average_stove_on_off_count'] = sum(stove_on_off_count) / len(stove_on_off_count)
                 quick_statistics['average_stove_on_off_count'] = math.ceil(quick_statistics['average_stove_on_off_count'] * 100) / 100
+                quick_statistics['average_stove_on_off_count_exclude_zero'] = sum(stove_on_off_count_exclude_zero_list) / len(stove_on_off_count_exclude_zero_list)
+                quick_statistics['average_stove_on_off_count_exclude_zero'] = math.ceil(quick_statistics['average_stove_on_off_count_exclude_zero'] * 100) / 100
 
                 average_power_consumption_per_use = [float(jitem['average_power_consumption_per_use']) for jitem in report_data]
+                average_power_consumption_per_use_exclude_zero_list = [float(jitem['average_power_consumption_per_use']) for jitem in report_data if float(jitem['average_power_consumption_per_use']) > 0]
                 quick_statistics['average_power_consumption_per_use'] = sum(average_power_consumption_per_use) / len(average_power_consumption_per_use)
                 quick_statistics['average_power_consumption_per_use'] = math.ceil(quick_statistics['average_power_consumption_per_use'] * 100) / 100
+                quick_statistics['average_power_consumption_per_use_exclude_zero'] = sum(average_power_consumption_per_use_exclude_zero_list) / len(average_power_consumption_per_use_exclude_zero_list)
+                quick_statistics['average_power_consumption_per_use_exclude_zero'] = math.ceil(quick_statistics['average_power_consumption_per_use_exclude_zero'] * 100) / 100
 
                 average_cooking_time_per_use = [float(jitem['average_cooking_time_per_use']) for jitem in report_data]
+                average_cooking_time_per_use_exclude_zero_list = [float(jitem['average_cooking_time_per_use']) for jitem in report_data if float(jitem['average_cooking_time_per_use']) > 0]
                 quick_statistics['average_cooking_time_per_use'] = sum(average_cooking_time_per_use) / len(average_cooking_time_per_use)
                 quick_statistics['average_cooking_time_per_use'] = math.ceil(quick_statistics['average_cooking_time_per_use'] * 100) / 100
+                quick_statistics['average_cooking_time_per_use_exclude_zero'] = sum(average_cooking_time_per_use_exclude_zero_list) / len(average_cooking_time_per_use_exclude_zero_list)
+                quick_statistics['average_cooking_time_per_use_exclude_zero'] = math.ceil(quick_statistics['average_cooking_time_per_use'] * 100) / 100
+
+            report_data = sorted(
+                report_data,
+                key=lambda item: item['when_datetime'],
+                reverse=True
+            )
 
             context['data'] = report_data
             context['quick_statistics'] = quick_statistics

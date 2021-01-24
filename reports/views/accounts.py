@@ -24,7 +24,7 @@ class LoginView(FormView):
 
             login(request=self.request, user=user)
             
-            return redirect('reports:dashboard')
+            return redirect('reports:reports')
 
         return render(self.request, self.template_name, context={
             'error_message': 'Invalid credentials',

@@ -82,7 +82,7 @@ for unit_number in unit_numbers:
 
         if to_month.date() > current_date:
             end = True
-            to_month = datetime.datetime.today()
+            to_month = datetime.datetime.today() - relativedelta(days=1)
             
         print('Running from ' + datetime.datetime.strftime(from_month, '%Y-%m-%d') + ' to ' + datetime.datetime.strftime(to_month, '%Y-%m-%d'))
 

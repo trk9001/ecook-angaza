@@ -128,7 +128,7 @@
                         {% if item.serial_number != 0 %}
                             <tr>
                                 <td>{{ item.serial_number }}</td>
-                                <td>{{ item.when_datetime|date:'Y-m-d' }}</td>
+                                <td>{{ item.when_date|date:'Y-m-d' }}</td>
                                 <td>{{ item.daily_power_consumption }}</td>
                                 <td>{{ item.left_stove_cooktime }}</td>
                                 <td>{{ item.right_stove_cooktime }}</td>

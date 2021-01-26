@@ -174,8 +174,6 @@ for unit_number in unit_numbers:
                 if 'stove_on_off_count' in item:
                     temp = item['stove_on_off_count']
 
-                    print(last_usage_data)
-
                     if not done_prev_usage_data and last_usage_data is not None:
                         done_prev_usage_data = True
                         item['stove_on_off_count'] = item['stove_on_off_count'] - last_usage_data['value']
@@ -235,7 +233,7 @@ for unit_number in unit_numbers:
 
             last_usage_data_filter = list(filter(lambda item: item['type'] == 228, data))
             last_usage_data = sorted(last_usage_data_filter, key=lambda item: item['when'], reverse=True)
-            last_usage_data = last_usage_data[0]
+            last_usage_data = last_usage_data[0] if len(last_usage_data) > 0 else None
 
         from_month = to_month + relativedelta(days=1)
         i+=1

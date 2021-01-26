@@ -89,7 +89,7 @@ for unit_number in unit_numbers:
     last_usage_data = None
     i = 1
     next = relativedelta(months=1)
-    from_month = datetime.datetime.strptime('2020-01-01', '%Y-%m-%d')
+    from_month = datetime.datetime.strptime('2020-12-01', '%Y-%m-%d')
     to_month = from_month + next
     message = 'Fetching data of unit number - ' + str(unit_number['unit_number'])
 

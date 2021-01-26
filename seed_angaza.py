@@ -197,6 +197,7 @@ for unit_number in unit_numbers:
                 )
 
             for item in daily_usage_data:
+                item['daily_power_consumption'] = item['daily_power_consumption'] / 1000 if item['daily_power_consumption'] > 0 else item['daily_power_consumption']
                 item['average_power_consumption_per_use'] = 0
                 item['average_cooking_time_per_use'] = 0
 

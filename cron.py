@@ -60,6 +60,8 @@ angaza.set_auth(username='atec_iot', password='U*p9fJi31$$X')
 for unit_number in unit_numbers:
     print('Fetching data of unit number - ' + str(unit_number['unit_number']) + ' for ' + datetime.datetime.strftime(from_date, '%Y-%m-%d'))
 
+    select_cursor.execute('SELECT * FROM reports_usagedata WHERE unit_number = "'+ str(unit_number['unit_number']) +'" AND data_type = "228" ORDER BY when_datetime DESC LIMIT 1')
+
     get_usage_data(
         unit_number=unit_number['unit_number'],
         from_when_dt='{}T01:00:00+00:00'.format(from_date)

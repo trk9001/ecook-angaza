@@ -29,7 +29,8 @@ for unit_number in unit_numbers:
     # Calling API to Angaza.
     helper. get_usage_data(
         unit_number=unit_number['unit_number'],
-        from_when_dt='{}T00:00:00+00:00'.format(from_date),
+        from_when_dt='{}T01:00:00+00:00'.format(from_date),
+        to_when_dt='{}T00:00:00+00:00'.format(today),
         variable=data
     )
 

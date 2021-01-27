@@ -4,3 +4,4 @@
 env
 __pycache__
 project_angaza_data_integration/.env
+processes/vars.py

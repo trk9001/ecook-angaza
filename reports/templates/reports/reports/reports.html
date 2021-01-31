@@ -153,6 +153,17 @@
                             </tr>
                         {% endif %}
                     {% endfor %}
+
+                    {% if data %}
+                        <tr>
+                            <th colspan="2">Total</th>
+                            <th>{{ total.daily_power_consumption }}</th>
+                            <th>{{ total.left_stove_cooktime }}</th>
+                            <th>{{ total.right_stove_cooktime }}</th>
+                            <th>{{ total.daily_cooking_time }}</th>
+                            <td colspan="3"></td>
+                        </tr>
+                    {% endif %}
                 </table>
             </div>
         </div>

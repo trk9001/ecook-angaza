@@ -20,6 +20,7 @@ class ReportsView(LoginRequiredMixin, TemplateView):
         request = self.request
 
         if 'daterange' in request.GET:
+            total = {}
             daterange = request.GET['daterange']
             query_params['daterange'] = daterange
             daterange_splitted = daterange.split(' - ')
@@ -97,8 +98,22 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                     if len(average_cooking_time_per_use_exclude_zero_list) > 0 else 0
                 quick_statistics['average_cooking_time_per_use_exclude_zero'] = math.ceil(quick_statistics['average_cooking_time_per_use'] * 100) / 100
 
+                total['daily_power_consumption'] = sum(
+                    [item.daily_power_consumption for item in data]
+                )
+                total['left_stove_cooktime'] = sum(
+                    [item.left_stove_cooktime for item in data]
+                )
+                total['right_stove_cooktime'] = sum(
+                    [item.right_stove_cooktime for item in data]
+                )
+                total['daily_cooking_time'] = sum(
+                    [item.daily_cooking_time for item in data]
+                )
+
                 context['data'] = data
                 context['quick_statistics'] = quick_statistics
+                context['total'] = total
             
         context['unit_numbers'] = UnitNumber.objects.all().order_by('unit_number')
         context['query_params'] = query_params

@@ -144,3 +144,9 @@ if not DEBUG:
     STATIC_ROOT = STATIC_DIR
 else:
     STATICFILES_DIRS = [STATIC_DIR, ]
+
+
+# Media
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'assets/files')
+MEDIA_URL = '/files/'

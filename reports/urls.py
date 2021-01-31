@@ -7,6 +7,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('', ReportsView.as_view(), name='reports'),
+    path('export/', ExportView.as_view(), name='export'),
     path('unit-numbers/', UnitNumberListView.as_view(), name='unit_numbers_list'),
     path('unit-numbers/create/', UnitNumberCreateView.as_view(), name='unit_numbers_create'),
     path('unit-numbers/<unit_number>/update/', UnitNumberUpdateView.as_view(), name='unit_numbers_update'),

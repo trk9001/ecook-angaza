@@ -1,5 +1,7 @@
-import datetime, math
-from django.views.generic import TemplateView
+import datetime, math, os, csv
+from urllib.parse import urlencode
+from django.http.response import Http404, HttpResponse
+from django.views.generic import View, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from reports.models import DailyUsageData, UnitNumber
 
@@ -100,5 +102,88 @@ class ReportsView(LoginRequiredMixin, TemplateView):
             
         context['unit_numbers'] = UnitNumber.objects.all().order_by('unit_number')
         context['query_params'] = query_params
+        context['query_params_encoded'] = urlencode(query_params)
 
         return context
+
+
+class ExportView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        if 'daterange' in request.GET:
+            daterange = request.GET['daterange']
+            daterange_splitted = daterange.split(' - ')
+            from_date = daterange_splitted[0]
+            from_date = datetime.datetime.strptime(from_date, '%m/%d/%Y').date()
+            from_date = str(from_date)
+            to_date = daterange_splitted[1]
+            to_date = datetime.datetime.strptime(to_date, '%m/%d/%Y').date()
+            to_date = str(to_date)
+            usage_data_filter = {
+                'when_date__gte': from_date,
+                'when_date__lte': to_date
+            }
+
+            if 'unit_number' in request.GET and request.GET['unit_number'] != 'all':
+                usage_data_filter['serial_number'] = request.GET['unit_number']
+
+            data = DailyUsageData.objects.filter(**usage_data_filter).order_by('-when_date')
+
+            if data.count() > 0:
+                file = None
+
+                if request.GET['format'] == 'csv':
+                    file = self.export_to_csv(data)
+                elif request.GET['format'] == 'pdf':
+                    file = self.export_to_pdf(data)
+
+                if file is not None:
+                    with open(file, 'r') as f:
+                        response = HttpResponse(f.read(), content_type='application/vnd.ms-excel')
+                        response['Content-Disposition'] = f'inline; filename={os.path.basename(file)}'
+
+                        return response
+
+        return Http404
+
+    def export_to_csv(self, data):
+        file_name = 'data.csv'
+        file_to_write = f'assets/files/{file_name}'
+
+        if os.path.exists(file_to_write):
+            os.remove(file_to_write)
+
+        with open(file_to_write, 'w') as file:
+            fieldnames = [
+                'Serial Number',
+                'Date',
+                'Daily Power Consumption (KWh)',
+                'Left Stove Cooking Time',
+                'Right Stove Cooking Time',
+                'Daily Cooking Time',
+                'Stove On/Off Count',
+                'Average Power Consumption per use',
+                'Average Cooking time per use'
+            ]
+            write = csv.DictWriter(file, fieldnames=fieldnames)
+
+            write.writeheader()
+
+            for item in data:
+                write.writerow(
+                    {
+                        'Serial Number': item.serial_number,
+                        'Date': item.when_date,
+                        'Daily Power Consumption (KWh)': item.daily_power_consumption,
+                        'Left Stove Cooking Time': item.left_stove_cooktime,
+                        'Right Stove Cooking Time': item.right_stove_cooktime ,
+                        'Daily Cooking Time': item.daily_cooking_time,
+                        'Stove On/Off Count': item.stove_on_off_count,
+                        'Average Power Consumption per use': item.average_power_consumption_per_use,
+                        'Average Cooking time per use': item.average_cooking_time_per_use
+                    }
+                )
+
+        return file_to_write
+
+    def export_to_pdf(self, data):
+        pass

@@ -74,6 +74,7 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                     if len(daily_cooking_time_exclude_zero_list) > 0 else 0
                 quick_statistics['average_cooking_time_exclude_zero'] = math.ceil(quick_statistics['average_cooking_time_exclude_zero'] * 100) / 100
                 quick_statistics['percentage_of_days_used'] = (len(daily_cooking_time_exclude_zero_list) / len(daily_cooking_time)) * 100
+                quick_statistics['percentage_of_days_used'] = math.ceil(quick_statistics['percentage_of_days_used'] * 100) / 100
 
                 stove_on_off_count = [item.stove_on_off_count for item in data]
                 stove_on_off_count_exclude_zero_list = [item.stove_on_off_count for item in data if item.stove_on_off_count > 0]

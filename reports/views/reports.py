@@ -45,6 +45,7 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                     usage_data_filter['serial_number__in'] = list(
                         map(lambda x: x.unit_number, unit_numbers)
                     )
+                    query_params['unit_number'] = 'All'
 
             if 'unit_number' in request.GET and request.GET['unit_number'] != 'all':
                 usage_data_filter['serial_number'] = request.GET['unit_number']

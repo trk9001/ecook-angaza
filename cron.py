@@ -1,4 +1,4 @@
-import datetime
+import datetime, time
 from processes.db import Database
 from processes.helper import Helper
 from processes.vars import ANGAZA_DATA_TYPES
@@ -118,6 +118,8 @@ for unit_number in unit_numbers:
                 datetime.datetime.now(),
             )
         )
+
+    time.sleep(1)
 
 if len(query_params) > 0:
     db.set_usagedata(data=query_params)

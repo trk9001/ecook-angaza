@@ -16,6 +16,8 @@ class UnitNumber(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     unit_number = models.PositiveIntegerField()
     description = models.TextField(blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

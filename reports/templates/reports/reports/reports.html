@@ -134,6 +134,7 @@
                         <th>Serial Number</th>
                         <th width="15%">Date</th>
                         <th>Daily Power Consumption (KWh)</th>
+                        <th>Cost ($)</th>
                         <th>Left Stove Cooking Time</th>
                         <th>Right Stove Cooking Time</th>
                         <th>Daily Cooking Time</th>
@@ -148,6 +149,7 @@
                                 <td>{{ item.serial_number }}</td>
                                 <td>{{ item.when_date|date:'Y-m-d' }}</td>
                                 <td>{{ item.daily_power_consumption }}</td>
+                                <td>{{ item.daily_power_consumption|cost:item.serial_number }}</td>
                                 <td>{{ item.left_stove_cooktime }}</td>
                                 <td>{{ item.right_stove_cooktime }}</td>
                                 <td>{{ item.daily_cooking_time }}</td>
@@ -162,6 +164,7 @@
                         <tr>
                             <th colspan="2">Total Items: {{ data|length }}</th>
                             <th>{{ total.daily_power_consumption }}</th>
+                            <th>{% total_cost %}</th>
                             <th>{{ total.left_stove_cooktime }}</th>
                             <th>{{ total.right_stove_cooktime }}</th>
                             <th>{{ total.daily_cooking_time }}</th>

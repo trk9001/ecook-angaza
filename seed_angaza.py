@@ -1,4 +1,4 @@
-import datetime
+import datetime, time
 from dateutil.relativedelta import relativedelta
 from processes.db import Database
 from processes.helper import Helper
@@ -179,6 +179,8 @@ for unit_number in unit_numbers:
         separator += '-'
 
     print(separator)
+
+    time.sleep(1)
 
 if len(query_params) > 0:
     db.set_usagedata(data=query_params)

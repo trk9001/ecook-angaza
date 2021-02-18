@@ -1,0 +1,19 @@
+{% csrf_token %}
+
+<div class="form-group">
+    <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+    <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}" class="form-control" value="{{ form.name.value|default_if_none:'' }}">
+
+    {% for error in form.name.errors %}
+        <span class="text-danger">{{ error }}</span>
+    {% endfor %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.cost.id_for_label }}">{{ form.cost.label }} ($)</label>
+    <input type="text" name="{{ form.cost.name }}" id="{{ form.cost.id_for_label }}" class="form-control" value="{{ form.cost.value|default_if_none:'' }}">
+
+    {% for error in form.cost.errors %}
+        <span class="text-danger">{{ error }}</span>
+    {% endfor %}
+</div>

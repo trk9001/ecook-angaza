@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 
-{% block title %}List of Unit Numbers{% endblock title %}
+{% block title %}List of Countries{% endblock title %}
 
 {% block body %}
     {% if messages %}
@@ -14,27 +14,23 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Unit Number</th>
                     <th>Name</th>
-                    <th>Country</th>
-                    <th>Description</th>
+                    <th>Cost</th>
                     <th></th>
                 </tr>
             </thead>
 
             <tbody>
-                {% for item in unit_numbers %}
+                {% for item in countries %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ item.unit_number }}</td>
-                        <td>{{ item.name|default_if_none:'---' }}</td>
-                        <td>{{ item.country|default_if_none:'---' }}</td>
-                        <td>{{ item.description }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>$ {{ item.cost }}</td>
                         <td>
-                            <a href="{% url 'reports:unit_numbers_update' item.unit_number %}">Edit</a> |
-                            <a href="javascript:;" onclick="document.getElementById('{{ item.unit_number }}').submit()">Delete</a>
+                            <a href="{% url 'reports:countries_update' item.id %}">Edit</a> |
+                            <a href="javascript:;" onclick="document.getElementById('{{ item.id }}').submit()">Delete</a>
 
-                            <form method="post" action="{% url 'reports:unit_numbers_delete' item.unit_number %}" id="{{ item.unit_number }}">
+                            <form method="post" action="{% url 'reports:countries_delete' item.id %}" id="{{ item.id }}">
                                 {% csrf_token %}
                             </form>
                         </td>

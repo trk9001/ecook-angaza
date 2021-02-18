@@ -1,24 +1,23 @@
+import math
 from django import template
+from reports.models import UnitNumber
 
 register = template.Library()
+total_cost_list = []
 
-TYPES = {
-    '219': 'Serial Number',
-    '220': 'Average Battery Voltage (Last 12 Hours)',
-    '221': 'Max Battery Voltage (Last 12 Hours)',
-    '222': 'Min Battery Voltage (Last 12 Hours)',
-    '223': 'Battery Critical State Count',
-    '224': '1 Hour Samples Count',
-    '225': 'Lock Mode Entry Count',
-    '226': 'Factory Mode Entry Count',
-    '227': 'GSM Sync Button Count',
-    '228': 'Stove On/Off Count',
-    '229': 'Energy Consumed per Hour',
-    '230': 'Left Stove Cooktime per Hour',
-    '231': 'Right Stove Cooktime per Hour',
-    '232': 'Others'
-}
 
-@register.filter(name='type_name')
-def type_name(value):
-    return TYPES[str(value)]
+@register.filter(name='cost')
+def cost(value, unit_number):
+    obj = UnitNumber.objects.get(unit_number=unit_number)
+
+    try:
+        cost = math.ceil((value * obj.country.cost) * 100) / 100
+        total_cost_list.append(cost)
+        return cost
+    except:
+        return 0.00
+
+
+@register.simple_tag
+def total_cost():
+    return math.ceil((sum(total_cost_list)) * 100) / 100

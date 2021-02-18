@@ -1,7 +1,18 @@
 from django.db import models
 
 
+class Country(models.Model):
+    name = models.CharField(max_length=100)
+    cost = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class UnitNumber(models.Model):
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=50, blank=True, null=True)
     unit_number = models.PositiveIntegerField()
     description = models.TextField(blank=True, null=True)

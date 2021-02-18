@@ -3,7 +3,7 @@ from urllib.parse import urlencode
 from django.http.response import Http404, HttpResponse
 from django.views.generic import View, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from reports.models import DailyUsageData, UnitNumber
+from reports.models import Country, DailyUsageData, UnitNumber
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -18,6 +18,7 @@ class ReportsView(LoginRequiredMixin, TemplateView):
         query_params = {}
         context = super().get_context_data(**kwargs)
         request = self.request
+        unit_numbers = UnitNumber.objects.all().order_by('unit_number')
 
         if 'daterange' in request.GET:
             total = {}
@@ -34,6 +35,16 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                 'when_date__gte': from_date,
                 'when_date__lte': to_date
             }
+
+            if 'country' in request.GET and request.GET['country'] != 'all':
+                query_params['country'] = request.GET['country']
+                country = Country.objects.filter(name=request.GET['country'])
+
+                if country.exists():
+                    unit_numbers = country.first().unitnumber_set.all().order_by('unit_number')
+                    usage_data_filter['serial_number__in'] = list(
+                        map(lambda x: x.unit_number, unit_numbers)
+                    )
 
             if 'unit_number' in request.GET and request.GET['unit_number'] != 'all':
                 usage_data_filter['serial_number'] = request.GET['unit_number']
@@ -107,7 +118,8 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                 context['quick_statistics'] = quick_statistics
                 context['total'] = total
             
-        context['unit_numbers'] = UnitNumber.objects.all().order_by('unit_number')
+        context['unit_numbers'] = unit_numbers
+        context['countries'] = Country.objects.all().order_by('name')
         context['query_params'] = query_params
         context['query_params_encoded'] = urlencode(query_params)
 

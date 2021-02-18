@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block title %}New Country{% endblock title %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-8 offset-2">
+            <form method="post">
+                {% include 'reports/countries/form.html' %}
+
+                <div class="form-group float-right">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock body %}

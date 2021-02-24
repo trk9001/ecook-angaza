@@ -25,7 +25,7 @@ class UnitNumber(models.Model):
         if self.name is not None:
             return self.name + ' - ' + self.unit_number
 
-        return self.unit_number
+        return str(self.unit_number)
 
 
 class UsageData(models.Model):

@@ -16,6 +16,7 @@ class ReportsView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         quick_statistics = {}
         query_params = {}
+        total_cost_list = []
         context = super().get_context_data(**kwargs)
         request = self.request
         unit_numbers = UnitNumber.objects.all().order_by('unit_number')
@@ -54,6 +55,16 @@ class ReportsView(LoginRequiredMixin, TemplateView):
             data = DailyUsageData.objects.filter(**usage_data_filter).order_by('-when_date')
 
             if data.count() > 0:
+                for item in data:
+                    obj = UnitNumber.objects.get(unit_number=item.serial_number)
+
+                    try:
+                        cost = math.ceil((item.daily_power_consumption * obj.country.cost) * 100) / 100
+                        total_cost_list.append(cost)
+                        item.cost = cost
+                    except:
+                        item.cost = 0.00
+
                 daily_power_consumption_list = [item.daily_power_consumption for item in data]
                 daily_power_consumption_list_exclude_zero_list = [item.daily_power_consumption for item in data if item.daily_power_consumption > 0]
                 quick_statistics['average_power_consumption'] = sum(daily_power_consumption_list) / len(daily_power_consumption_list)
@@ -114,6 +125,7 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                 total['daily_cooking_time'] = sum(
                     [item.daily_cooking_time for item in data]
                 )
+                total['total_cost'] = math.ceil(sum(total_cost_list) * 100) / 100
 
                 context['data'] = data
                 context['quick_statistics'] = quick_statistics

@@ -60,10 +60,20 @@ class ReportsView(LoginRequiredMixin, TemplateView):
 
                     try:
                         cost = math.ceil((item.daily_power_consumption * obj.country.cost) * 100) / 100
-                        total_cost_list.append(cost)
                         item.cost = cost
+
+                        if cost > 0:
+                            total_cost_list.append(cost)
                     except:
                         item.cost = 0.00
+
+                total_cost = math.ceil(sum(total_cost_list) * 100) / 100
+                quick_statistics['average_cost'] = total_cost / data.count()
+                quick_statistics['average_cost'] = math.ceil(quick_statistics['average_cost'] * 100) / 100
+                quick_statistics['average_cost_exclude_zero'] = total_cost / len(total_cost_list)
+                quick_statistics['average_cost_exclude_zero'] = math.ceil(
+                    quick_statistics['average_cost_exclude_zero'] * 100
+                ) / 100
 
                 daily_power_consumption_list = [item.daily_power_consumption for item in data]
                 daily_power_consumption_list_exclude_zero_list = [item.daily_power_consumption for item in data if item.daily_power_consumption > 0]
@@ -125,7 +135,7 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                 total['daily_cooking_time'] = sum(
                     [item.daily_cooking_time for item in data]
                 )
-                total['total_cost'] = math.ceil(sum(total_cost_list) * 100) / 100
+                total['total_cost'] = total_cost
 
                 context['data'] = data
                 context['quick_statistics'] = quick_statistics

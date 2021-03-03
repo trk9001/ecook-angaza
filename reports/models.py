@@ -14,7 +14,7 @@ class Country(models.Model):
 class UnitNumber(models.Model):
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=50, blank=True, null=True)
-    unit_number = models.PositiveIntegerField()
+    unit_number = models.PositiveIntegerField(unique=True)
     description = models.TextField(blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)

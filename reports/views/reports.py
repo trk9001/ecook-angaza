@@ -4,7 +4,7 @@ from django.http.response import Http404, HttpResponse
 from django.views.generic import View, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from reports.models import Country, DailyUsageData, UnitNumber
-from reports.exports import Export, Csv
+from reports.exports import Exporter, Csv, Pdf
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -173,11 +173,9 @@ class ExportView(LoginRequiredMixin, View):
             data = DailyUsageData.objects.filter(**usage_data_filter).order_by('-when_date')
 
             if data.count() > 0:
-                file = None
-
                 if request.GET['format'] == 'csv':
-                    return Export(Csv).export(data=data)
-                # elif request.GET['format'] == 'pdf':
-                #     file = self.export_to_pdf(data)
+                    return Exporter(Csv).export(data=data)
+                elif request.GET['format'] == 'pdf':
+                    return Exporter(Pdf).export(data=data)
 
         return Http404

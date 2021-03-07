@@ -1,7 +1,7 @@
 from .base import Base
 
 
-class Export:
+class Exporter:
     __export_class = None
 
     def __init__(self, export_class: Base):

@@ -6,9 +6,75 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Export to Pdf</title>
+    <style>
+        #data th, #data td {
+            padding: 4px;
+            vertical-align: middle;
+        }
+
+        #stats th, #stats td {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <table border="1">
+    <h3>Quick Statistics</h3>
+
+    <table id="stats">
+        <tr>
+            <th></th>
+            <th>Including non-use days</th>
+            <th>Excluding non-use days</th>
+        </tr>
+        <tr>
+            <td style="text-align: left;"><strong>Average Power Consumption (KWh / day)</strong></td>
+            <td>{{ quick_statistics.average_power_consumption }}</td>
+            <td>{{ quick_statistics.average_power_consumption_exclude_zero }}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;"><strong>Average Left Stove Cooking Time (Min / day)</strong></td>
+            <td>{{ quick_statistics.average_left_stove_cooktime }}</td>
+            <td>{{ quick_statistics.average_left_stove_cooktime_exclude_zero }}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;"><strong>Average Right Stove Cooking Time (Min / day)</strong></td>
+            <td>{{ quick_statistics.average_right_stove_cooktime }}</td>
+            <td>{{ quick_statistics.average_right_stove_cooktime_exclude_zero }}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;"><strong>Average Cooking Time (Min / day)</strong></td>
+            <td>{{ quick_statistics.average_cooking_time }}</td>
+            <td>{{ quick_statistics.average_cooking_time_exclude_zero }}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;"><strong>Average Cost ($)</strong></td>
+            <td>{{ quick_statistics.average_cost }}</td>
+            <td>{{ quick_statistics.average_cost_exclude_zero }}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;"><strong>Average Stove On/Off Count (Per day)</strong></td>
+            <td>{{ quick_statistics.average_stove_on_off_count }}</td>
+            <td>{{ quick_statistics.average_stove_on_off_count_exclude_zero }}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;"><strong>Average Power Consumption per use (KWh)</strong></td>
+            <td>{{ quick_statistics.average_power_consumption_per_use }}</td>
+            <td>{{ quick_statistics.average_power_consumption_per_use_exclude_zero }}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;"><strong>Average Cooking time per use (Min)</strong></td>
+            <td>{{ quick_statistics.average_cooking_time_per_use }}</td>
+            <td>{{ quick_statistics.average_cooking_time_per_use_exclude_zero }}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;"><strong>% of Days Used</strong></td>
+            <td colspan="2">{{ quick_statistics.percentage_of_days_used }}%</td>
+        </tr>
+    </table>
+
+    <br>
+
+    <table border="1" id="data">
         <tr>
             <th>Serial Number</th>
             <th width="15%">Date</th>

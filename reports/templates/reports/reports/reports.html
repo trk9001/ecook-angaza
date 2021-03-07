@@ -130,17 +130,17 @@
     <br>
 
     {% if data %}
-        {% comment %} <div class="row">
+        <div class="row">
             <div class="col-md-12">
                 <div class="float-right">
                     Export to
-                    <a href="{% url 'reports:export' %}?format=csv{% if query_params_encoded %}&{{ query_params_encoded }}{% endif %}"><i class="fas fa-file-csv" style="font-size: 30px;"></i></a>
-                    <a href="{% url 'reports:export' %}?format=pdf{% if query_params_encoded %}&{{ query_params_encoded }}{% endif %}"><i class="fas fa-file-pdf" style="font-size: 30px;"></i></a>
+                    <a href="{% url 'reports:exports' %}?format=csv{% if query_params_encoded %}&{{ query_params_encoded }}{% endif %}"><i class="fas fa-file-csv" style="font-size: 30px;"></i></a>
+                    <a href="{% url 'reports:exports' %}?format=pdf{% if query_params_encoded %}&{{ query_params_encoded }}{% endif %}"><i class="fas fa-file-pdf" style="font-size: 30px;"></i></a>
                 </div>
             </div>
         </div>
 
-        <br> {% endcomment %}
+        <br>
     {% endif %}
     
     <div class="row">

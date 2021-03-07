@@ -4,6 +4,7 @@ from django.http.response import Http404, HttpResponse
 from django.views.generic import View, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from reports.models import Country, DailyUsageData, UnitNumber
+from reports.exports import Export, Csv
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -70,7 +71,8 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                 total_cost = math.ceil(sum(total_cost_list) * 100) / 100
                 quick_statistics['average_cost'] = total_cost / data.count()
                 quick_statistics['average_cost'] = math.ceil(quick_statistics['average_cost'] * 100) / 100
-                quick_statistics['average_cost_exclude_zero'] = total_cost / len(total_cost_list)
+                quick_statistics['average_cost_exclude_zero'] = total_cost / len(total_cost_list) \
+                    if len(total_cost_list) > 0 else 0.00
                 quick_statistics['average_cost_exclude_zero'] = math.ceil(
                     quick_statistics['average_cost_exclude_zero'] * 100
                 ) / 100
@@ -174,58 +176,8 @@ class ExportView(LoginRequiredMixin, View):
                 file = None
 
                 if request.GET['format'] == 'csv':
-                    file = self.export_to_csv(data)
-                elif request.GET['format'] == 'pdf':
-                    file = self.export_to_pdf(data)
-
-                if file is not None:
-                    with open(file, 'r') as f:
-                        response = HttpResponse(f.read(), content_type='application/vnd.ms-excel')
-                        response['Content-Disposition'] = f'inline; filename={os.path.basename(file)}'
-
-                        return response
+                    return Export(Csv).export(data=data)
+                # elif request.GET['format'] == 'pdf':
+                #     file = self.export_to_pdf(data)
 
         return Http404
-
-    def export_to_csv(self, data):
-        file_name = 'data.csv'
-        file_to_write = f'assets/files/{file_name}'
-
-        if os.path.exists(file_to_write):
-            os.remove(file_to_write)
-
-        with open(file_to_write, 'w') as file:
-            fieldnames = [
-                'Serial Number',
-                'Date',
-                'Daily Power Consumption (KWh)',
-                'Left Stove Cooking Time',
-                'Right Stove Cooking Time',
-                'Daily Cooking Time',
-                'Stove On/Off Count',
-                'Average Power Consumption per use',
-                'Average Cooking time per use'
-            ]
-            write = csv.DictWriter(file, fieldnames=fieldnames)
-
-            write.writeheader()
-
-            for item in data:
-                write.writerow(
-                    {
-                        'Serial Number': item.serial_number,
-                        'Date': item.when_date,
-                        'Daily Power Consumption (KWh)': item.daily_power_consumption,
-                        'Left Stove Cooking Time': item.left_stove_cooktime,
-                        'Right Stove Cooking Time': item.right_stove_cooktime ,
-                        'Daily Cooking Time': item.daily_cooking_time,
-                        'Stove On/Off Count': item.stove_on_off_count,
-                        'Average Power Consumption per use': item.average_power_consumption_per_use,
-                        'Average Cooking time per use': item.average_cooking_time_per_use
-                    }
-                )
-
-        return file_to_write
-
-    def export_to_pdf(self, data):
-        pass

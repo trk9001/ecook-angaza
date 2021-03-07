@@ -170,6 +170,15 @@ class ExportView(LoginRequiredMixin, View):
             if 'unit_number' in request.GET and request.GET['unit_number'] != 'all':
                 usage_data_filter['serial_number'] = request.GET['unit_number']
 
+            if 'country' in request.GET and request.GET['country'] != 'all':
+                country = Country.objects.filter(name=request.GET['country'])
+
+                if country.exists():
+                    unit_numbers = country.first().unitnumber_set.all().order_by('unit_number')
+                    usage_data_filter['serial_number__in'] = list(
+                        map(lambda x: x.unit_number, unit_numbers)
+                    )
+
             data = DailyUsageData.objects.filter(**usage_data_filter).order_by('-when_date')
 
             if data.count() > 0:

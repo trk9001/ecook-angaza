@@ -28,11 +28,9 @@
             var map = document.getElementById("map");
             var infoWindow = new google.maps.InfoWindow();
             var marker, i;
-            var bounds = new google.maps.LatLngBounds();
 
             for (i = 0; i < markers.length; i++) { 
                 var pos = new google.maps.LatLng(markers[i][1], markers[i][2]);
-                bounds.extend(pos);
                 marker = new google.maps.Marker({
                     position: pos,
                     map: map
@@ -43,9 +41,9 @@
                         infowindow.open(map, marker);
                     }
                 })(marker, i));
+                market.setUp(map);
             }
-            map.fitBounds(bounds);
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuUy61JWoIwAAX7PCDLqsMKwkSW8L31R0&callback=initMap"></script>
+    <script src="http://maps.google.com/maps/api/js?callback=initMap"></script>
 {% endblock %}

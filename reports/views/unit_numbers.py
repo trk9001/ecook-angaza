@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView
 from reports.models import UnitNumber
 
 
@@ -47,3 +47,13 @@ class UnitNumberDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
 
     def get_success_message(self, cleaned_data: Dict[str, str]) -> str:
         return str(cleaned_data['unit_number']) + ' was deleted successfully'
+
+
+class MapView(TemplateView):
+    template_name = 'reports/map.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['unit_numbers'] = UnitNumber.objects.all()
+
+        return context

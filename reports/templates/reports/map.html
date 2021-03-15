@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+
+{% block title %}Map{% endblock title %}
+
+{% block body %}
+    <h3>Hi, Thank you!</h3>
+
+    <div id="map"></div>
+{% endblock body %}
+
+{% block script %}
+    <script>
+        function initMap() {
+            var markers = [];
+
+            {% for item in unit_numbers %}
+                {% if item.latitude is not None %}
+                    markers.push(
+                        [{{ item }}, {{ item.latitude }}, {{ item.longitude }}]
+                    );
+                {% endif %}
+            {% endfor %}
+
+            var mapOptions = {
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeControl: false
+            };
+            var map = document.getElementById("map");
+            var infoWindow = new google.maps.InfoWindow();
+            var marker, i;
+            var bounds = new google.maps.LatLngBounds();
+
+            for (i = 0; i < markers.length; i++) { 
+                var pos = new google.maps.LatLng(markers[i][1], markers[i][2]);
+                bounds.extend(pos);
+                marker = new google.maps.Marker({
+                    position: pos,
+                    map: map
+                });
+                google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                    return function() {
+                        infowindow.setContent(markers[i][0]);
+                        infowindow.open(map, marker);
+                    }
+                })(marker, i));
+            }
+            map.fitBounds(bounds);
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuUy61JWoIwAAX7PCDLqsMKwkSW8L31R0&callback=initMap"></script>
+{% endblock %}

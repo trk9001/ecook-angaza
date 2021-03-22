@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block title %}Import from CSV{% endblock title %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-8 offset-2">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form.csv.id_for_label }}">{{ form.csv.label }}</label>
+                    {{ form.csv }}
+
+                    {% for error in form.csv.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group float-right">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock body %}

@@ -14,6 +14,7 @@ urlpatterns = [
     path('countries/<pk>/update/', CountryUpdateView.as_view(), name='countries_update'),
     path('countries/<pk>/delete/', CountryDeleteView.as_view(), name='countries_delete'),
     path('unit-numbers/', UnitNumberListView.as_view(), name='unit_numbers_list'),
+    path('unit-numbers/import/', ImportView.as_view(), name='unit_numbers_import'),
     path('unit-numbers/create/', UnitNumberCreateView.as_view(), name='unit_numbers_create'),
     path('unit-numbers/<unit_number>/update/', UnitNumberUpdateView.as_view(), name='unit_numbers_update'),
     path('unit-numbers/<unit_number>/delete/', UnitNumberDeleteView.as_view(), name='unit_numbers_delete'),

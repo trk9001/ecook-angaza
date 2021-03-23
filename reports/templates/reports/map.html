@@ -18,7 +18,7 @@
             {% for item in unit_numbers %}
                 {% if item.latitude is not None %}
                     markers.push(
-                        [{{ item }}, {{ item.latitude }}, {{ item.longitude }}]
+                        [{{ item.unit_number }}, {{ item.latitude }}, {{ item.longitude }}]
                     );
                     lats.push({{ item.latitude }});
                     lngs.push({{ item.longitude }});

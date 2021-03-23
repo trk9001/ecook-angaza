@@ -23,7 +23,7 @@ class UnitNumber(models.Model):
 
     def __str__(self) -> str:
         if self.name is not None:
-            return self.name + ' - ' + self.unit_number
+            return self.name + ' - ' + str(self.unit_number)
 
         return str(self.unit_number)
 

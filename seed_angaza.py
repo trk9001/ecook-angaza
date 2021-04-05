@@ -15,6 +15,16 @@ current_year = current_date.year
 current_day = current_date.day
 unit_numbers = db.get_unitnumbers()
 unit_number_counter = 1
+total_unit_numbers_message = f'{len(unit_numbers)} unit numbers found'
+total_unit_numbers_message_separator = ''
+
+for _ in range(0, len(total_unit_numbers_message)):
+    total_unit_numbers_message_separator += '-'
+
+total_unit_numbers_message_separator += '\n'
+
+print(total_unit_numbers_message)
+print(total_unit_numbers_message_separator)
 
 # Iterate all the unit numbers to get data against a unit number.
 for unit_number in unit_numbers:

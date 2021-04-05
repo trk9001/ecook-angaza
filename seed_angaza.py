@@ -62,8 +62,8 @@ for unit_number in unit_numbers:
         # Calling API to Angaza.
         helper. get_usage_data(
             unit_number=unit_number['unit_number'],
-            from_when_dt='{}T01:00:00+00:00'.format(datetime.datetime.strftime(from_month, '%Y-%m-%d')),
-            to_when_dt='{}T01:00:00+00:00'.format(datetime.datetime.strftime(to_month, '%Y-%m-%d')),
+            from_when_dt='{}T00:00:00+00:00'.format(datetime.datetime.strftime(from_month, '%Y-%m-%d')),
+            to_when_dt='{}T00:00:00+00:00'.format(datetime.datetime.strftime(to_month, '%Y-%m-%d')),
             variable=data
         )
 

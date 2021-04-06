@@ -57,9 +57,8 @@ class ReportsView(LoginRequiredMixin, TemplateView):
 
             if data.count() > 0:
                 for item in data:
-                    obj = UnitNumber.objects.get(unit_number=item.serial_number)
-
                     try:
+                        obj = UnitNumber.objects.get(unit_number=item.serial_number)
                         cost = math.ceil((item.daily_power_consumption * obj.country.cost) * 100) / 100
                         item.cost = cost
 

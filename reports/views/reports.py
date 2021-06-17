@@ -118,11 +118,24 @@ class ReportsView(LoginRequiredMixin, TemplateView):
                     if len(stove_on_off_count_exclude_zero_list) > 0 else 0
                 quick_statistics['average_stove_on_off_count_exclude_zero'] = math.ceil(quick_statistics['average_stove_on_off_count_exclude_zero'] * 100) / 100
 
-                quick_statistics['average_power_consumption_per_use'] = math.ceil((quick_statistics['average_power_consumption'] / quick_statistics['average_stove_on_off_count']) * 100) / 100
-                quick_statistics['average_power_consumption_per_use_exclude_zero'] = math.ceil((quick_statistics['average_power_consumption_exclude_zero'] / quick_statistics['average_stove_on_off_count_exclude_zero']) * 100) / 100
+                try:
+                    quick_statistics['average_power_consumption_per_use'] = math.ceil((quick_statistics['average_power_consumption'] / quick_statistics['average_stove_on_off_count']) * 100) / 100
+                except:
+                    quick_statistics['average_power_consumption_per_use'] = 0.00                    
+                try:
+                    quick_statistics['average_power_consumption_per_use_exclude_zero'] = math.ceil((quick_statistics['average_power_consumption_exclude_zero'] / quick_statistics['average_stove_on_off_count_exclude_zero']) * 100) / 100
+                except:
+                    quick_statistics['average_power_consumption_per_use_exclude_zero'] = 0.00
 
-                quick_statistics['average_cooking_time_per_use'] = math.ceil((quick_statistics['average_cooking_time'] / quick_statistics['average_stove_on_off_count']) * 100) / 100
-                quick_statistics['average_cooking_time_per_use_exclude_zero'] = math.ceil((quick_statistics['average_cooking_time_exclude_zero'] / quick_statistics['average_stove_on_off_count_exclude_zero']) * 100) / 100
+                try:
+                    quick_statistics['average_cooking_time_per_use'] = math.ceil((quick_statistics['average_cooking_time'] / quick_statistics['average_stove_on_off_count']) * 100) / 100
+                except:
+                    quick_statistics['average_cooking_time_per_use'] = 0.00
+
+                try:
+                    quick_statistics['average_cooking_time_per_use_exclude_zero'] = math.ceil((quick_statistics['average_cooking_time_exclude_zero'] / quick_statistics['average_stove_on_off_count_exclude_zero']) * 100) / 100
+                except:
+                    quick_statistics['average_cooking_time_per_use_exclude_zero'] = 0.00
 
                 total['daily_power_consumption'] = sum(
                     [item.daily_power_consumption for item in data]

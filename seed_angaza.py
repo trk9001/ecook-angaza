@@ -32,12 +32,13 @@ for unit_number in unit_numbers:
     end = False
     last_usage_data = None
     i = 1
-    next = relativedelta(months=1)
-    from_month = datetime.datetime.strptime('2020-12-01', '%Y-%m-%d')
+    next = relativedelta(days=10)
+    from_month = datetime.datetime.strptime('2021-04-14', '%Y-%m-%d')
     to_month = from_month + next
     message = '(' + str(unit_number_counter) + ') Fetching data of unit number - ' + str(unit_number['unit_number'])
 
     print(message)
+    print(from_month, to_month)
     unit_number_counter += 1
 
     # Fetch data from Angaza by 1 month till yesterday.
